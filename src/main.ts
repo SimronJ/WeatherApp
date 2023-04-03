@@ -38,15 +38,21 @@ function renderWeather({
   document.body.classList.remove("blurred");
 }
 
-function setValue(selector: string, value: any, { parent = document } = {}) {
-  parent.querySelector(`[data-${selector}]`)!.textContent = value;
+function setValue(
+  selector: string,
+  value: any,
+  { parent = document }: { parent?: Document | Node } = {}
+) {
+  (parent as Element).querySelector(`[data-${selector}]`)!.textContent = value;
 }
 
 function getIconUrl(iconCode: any) {
   return `icons/${ICON_MAP.get(iconCode)}.svg`;
 }
 
-const currentIcon = document.querySelector("[data-current-icon]");
+const currentIcon = document.querySelector(
+  "[data-current-icon]"
+) as HTMLImageElement;
 function renderCurrentWeather(current: any) {
   currentIcon!.src = getIconUrl(current.iconCode);
   setValue("current-temp", current.currentTemp);
@@ -60,7 +66,9 @@ function renderCurrentWeather(current: any) {
 
 const DAY_FORMATTER = new Intl.DateTimeFormat(undefined, { weekday: "long" });
 const dailySection = document.querySelector("[data-day-section]");
-const dayCardTemplate = document.getElementById("day-card-template");
+const dayCardTemplate = document.getElementById(
+  "day-card-template"
+) as HTMLTemplateElement;
 function renderDailyWeather(daily: any[]) {
   dailySection!.innerHTML = "";
   daily.forEach(
@@ -69,12 +77,13 @@ function renderDailyWeather(daily: any[]) {
       timestamp: number | Date | undefined;
       iconCode: any;
     }) => {
-      const element = dayCardTemplate!.content.cloneNode(true);
+      let element = dayCardTemplate!.content.cloneNode(true) as HTMLElement;
       setValue("temp", day.maxTemp, { parent: element });
       setValue("date", DAY_FORMATTER.format(day.timestamp), {
         parent: element,
       });
-      element.querySelector("[data-icon]").src = getIconUrl(day.iconCode);
+      // @ts-ignore
+      element.querySelector("[data-icon]")!.src = getIconUrl(day.iconCode);
       dailySection!.append(element);
     }
   );
@@ -82,7 +91,9 @@ function renderDailyWeather(daily: any[]) {
 
 const HOUR_FORMATTER = new Intl.DateTimeFormat(undefined, { hour: "numeric" });
 const hourlySection = document.querySelector("[data-hour-section]");
-const hourRowTemplate = document.getElementById("hour-row-template");
+const hourRowTemplate = document.getElementById(
+  "hour-row-template"
+) as HTMLTemplateElement;
 function renderHourlyWeather(hourly: any[]) {
   hourlySection!.innerHTML = "";
   hourly.forEach(
@@ -94,7 +105,7 @@ function renderHourlyWeather(hourly: any[]) {
       timestamp: number | Date | undefined;
       iconCode: any;
     }) => {
-      const element = hourRowTemplate!.content.cloneNode(true);
+      let element = hourRowTemplate!.content.cloneNode(true);
       setValue("temp", hour.temp, { parent: element });
       setValue("fl-temp", hour.feelsLike, { parent: element });
       setValue("wind", hour.windSpeed, { parent: element });
@@ -105,6 +116,7 @@ function renderHourlyWeather(hourly: any[]) {
       setValue("time", HOUR_FORMATTER.format(hour.timestamp), {
         parent: element,
       });
+      // @ts-ignore
       element.querySelector("[data-icon]").src = getIconUrl(hour.iconCode);
       hourlySection!.append(element);
     }
