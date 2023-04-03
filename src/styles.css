@@ -114,3 +114,20 @@ body {
 .hour-row > td {
   padding: 0.25rem 0.5rem;
 }
+
+footer {
+  background: #dddee1;
+  padding: 5vh 0;
+  text-align: center;
+  position: relative;
+  font-size: large;
+}
+
+small {
+  opacity: 0.5;
+  font-weight: bold;
+}
+
+small > a {
+  color: inherit;
+}
