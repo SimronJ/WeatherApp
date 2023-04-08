@@ -1,0 +1,2 @@
+Website: https://weather-app-simronj.vercel.app/
+Code: https://github.com/SimronJ/WeatherApp
